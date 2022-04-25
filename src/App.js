@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from 'react';
 import axios from '../node_modules/axios/index';
-import { Route } from '../node_modules/react-router-dom/index';
+import { Route, Routes } from '../node_modules/react-router-dom/index';
 import Categories from './components/Categories';
 import NewsList from './components/NewsList';
 import NewsPage from './pages/NewsPage';
