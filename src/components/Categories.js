@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import { NavLink } from '../../node_modules/react-router-dom/index.js';
 import { css } from '../../node_modules/styled-components/dist/styled-components.cjs';
 
 const categories = [
@@ -44,7 +45,7 @@ const CategoriesBlock = styled.div`
   }
 `;
 
-const Category = styled.div`
+const Category = styled(NavLink)`
   font-size: 1.125rem;
   cursor: pointer;
   white-space: pre;
@@ -56,15 +57,14 @@ const Category = styled.div`
     color : #495057;
   }
 
-  ${props =>
-    props.active && css`
-      font-weight: 600;
-      border-bottom: 2px solid #22b8cf;
-      color : #22b8cf;
-      &:hover {
-        color : #3bc9db;
-      }
-    `
+  
+  &.active {
+    font-weight: 600;
+    border-bottom: 2px solid #22b8cf;
+    color : #22b8cf;
+    &:hover {
+      color : #3bc9db;
+    }
   }
 
   & + & {
@@ -72,11 +72,11 @@ const Category = styled.div`
   }
 `;
 
-const Categories = ({ onSelect, category }) => {
+const Categories = () => {
   return (
     <CategoriesBlock>
       {categories.map(c => (
-        <Category key={c.name} active={category === c.name} onClick={() => onSelect(c.name)}>{c.text}</Category>
+        <Category key={c.name} className={(isActive) => (isActive ? 'active' : undefined)} to={c.name === 'all' ? '/' : `/${c.name }`}>{c.text}</Category>
       ))}
     </CategoriesBlock>
   );

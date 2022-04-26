@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
 import NewsItem from './NewsItem';
+import usePromise from '../lib/usePromise';
 
 const NewsListBlock = styled.div`
   box-sizing: border-box;
@@ -24,33 +25,53 @@ const NewsListBlock = styled.div`
 // };
 
 const NewsList = ({ category }) => {
-  const [articles, setArticles] = useState(null);
-  const [loading, setLoading] = useState(false);
+  // const [articles, setArticles] = useState(null);
+  // const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      try {
-        const query = category === 'all' ? '' : `&category=${category}`;
-        const response = await axios.get(
-          `https://newsapi.org/v2/top-headlines?country=kr${query}&apiKey=0e111ec69270475381bdd85e81f04229`,
-        );
-        setArticles(response.data.articles);
-      } catch (e) {
-        console.log(e);
-      }
-      setLoading(false);
-    };
-    fetchData();
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     setLoading(true);
+  //     try {
+  //       const query = category === 'all' ? '' : `&category=${category}`;
+  //       const response = await axios.get(
+  //         `https://newsapi.org/v2/top-headlines?country=kr${query}&apiKey=0e111ec69270475381bdd85e81f04229`,
+  //       );
+  //       setArticles(response.data.articles);
+  //     } catch (e) {
+  //       console.log(e);
+  //     }
+  //     setLoading(false);
+  //   };
+  //   fetchData();
+  // }, [category]);
+
+  // if (loading) {
+  //   return <NewsListBlock>대기 중...</NewsListBlock>;
+  // }
+
+  // if (!articles) {
+  //   return null;
+  // }
+  const [loading, response, error] = usePromise(() => {
+    const query = category === 'all' ? '' : `&category=${category}`;
+    return axios.get(
+      `https://newsapi.org/v2/top-headlines?country=kr${query}&apiKey=0e111ec69270475381bdd85e81f04229`,
+    );
   }, [category]);
 
   if (loading) {
     return <NewsListBlock>대기 중...</NewsListBlock>;
   }
 
-  if (!articles) {
+  if (!response) {
     return null;
   }
+
+  if (error) {
+    return <NewsListBlock>에러 발생!</NewsListBlock>
+  }
+
+  const {articles} = response.data; 
 
   return (
     <NewsListBlock>
